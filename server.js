@@ -1,6 +1,21 @@
 const express = require("express")
 const app = express()
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/whiteboard', {useNewUrlParser: true});
+
+const quizSchema = mongoose.Schema({
+  name: String,
+  avg: Number
+}, {collection: "quizzes"})
+
+// java = repositories, mongoose = model
+// can't have 2 models with the same name!
+const quizModel = mongoose.model("QuizModel", quizSchema)
+
+quizModel.find()
+.then(quizzes => console.log(quizzes))
+
 // @GetMapping("/hello")
 // public String function() {
 //  return "Hello World";
@@ -14,6 +29,16 @@ app.get('/add/:a/:b', (req, res) => {
   const c = a + b
   res.send({c: c})
 })*/
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers',
+      'Content-Type, X-Requested-With, Origin');
+  res.header('Access-Control-Allow-Methods',
+      'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  next();
+});
+
 
 /*const quizzesService = require("./services/quizzes-service")
 quizzesService(app)*/
